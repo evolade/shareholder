@@ -291,7 +291,7 @@ class _AppState extends State<App> {
                     itemBuilder: (BuildContext context, int index) {
                       return ListTile(
                         leading: Text(
-                          "    ${shareHolders[index]}    ",
+                          "${index + 1}.     ${shareHolders[index]}    ",
                           style: TextStyle(
                             fontSize: width / 30,
                             color: Colors.white70,
