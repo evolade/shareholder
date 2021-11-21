@@ -33,6 +33,8 @@ class _AppState extends State<App> {
     super.initState();
   }
 
+  Color bgColor = Color(0xFF212c31); // gray-blue
+
   int valuation = box.read("valuation_key") ?? 0;
   List<dynamic> shareHolders = box.read("shareHolders_key") ?? [];
   List<dynamic> money = box.read("money_key") ?? [];
@@ -91,7 +93,7 @@ class _AppState extends State<App> {
     return MaterialApp(
       home: Scaffold(
         resizeToAvoidBottomInset: false,
-        backgroundColor: Color(0xFF212121), // grey
+        backgroundColor: bgColor,
         body: SafeArea(
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: width / 18),
@@ -177,7 +179,7 @@ class _AppState extends State<App> {
                             child: Text(
                               "Add Investor",
                               style: TextStyle(
-                                color: Color(0xFF212121), // green
+                                color: bgColor,
                                 fontSize: width / 27,
                               ),
                             ),
@@ -202,7 +204,7 @@ class _AppState extends State<App> {
                             child: Text(
                               "Clear",
                               style: TextStyle(
-                                color: Color(0xFF212121), // red
+                                color: bgColor, // red
                                 fontSize: width / 27,
                               ),
                             ),
@@ -253,16 +255,19 @@ class _AppState extends State<App> {
                             color: Colors.green[400],
                             child: IconButton(
                               onPressed: () {
-                                setState(() {
-                                  valuation += int.parse(valueController.text);
-                                  for (int i = 0;
-                                      i < shareHolders.length;
-                                      i++) {
-                                    money[i] =
-                                        (valuation * perc[i] / 100).round();
-                                  }
-                                  writeData();
-                                });
+                                if (shareHolders.isNotEmpty) {
+                                  setState(() {
+                                    valuation +=
+                                        int.parse(valueController.text);
+                                    for (int i = 0;
+                                        i < shareHolders.length;
+                                        i++) {
+                                      money[i] =
+                                          (valuation * perc[i] / 100).round();
+                                    }
+                                    writeData();
+                                  });
+                                }
                               },
                               icon: Icon(Icons.add),
                             ),
@@ -289,7 +294,7 @@ class _AppState extends State<App> {
                           "    ${shareHolders[index]}    ",
                           style: TextStyle(
                             fontSize: width / 30,
-                            color: Color(0xFFABABAB),
+                            color: Colors.white70,
                           ),
                         ),
                         title: Text(
