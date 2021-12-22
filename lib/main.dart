@@ -91,20 +91,22 @@ class _AppState extends State<App> {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: bgColor,
         body: SafeArea(
+          bottom: false,
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: width / 18),
+            padding: EdgeInsets.symmetric(horizontal: width / 30),
             child: Column(
               children: [
                 Center(),
-                SizedBox(height: height / 18),
+                SizedBox(height: height / 20),
                 TextField(
                   cursorColor: Colors.white,
                   controller: nameController,
-                  style: TextStyle(color: Colors.white70, fontSize: width / 30),
+                  style: TextStyle(color: Colors.white70, fontSize: width / 25),
                   decoration: const InputDecoration(
                     labelText: "Investor name",
                     labelStyle: TextStyle(color: Colors.white60),
@@ -123,7 +125,7 @@ class _AppState extends State<App> {
                   keyboardType: TextInputType.number,
                   cursorColor: Colors.white,
                   controller: investmentController,
-                  style: TextStyle(color: Colors.green, fontSize: width / 30),
+                  style: TextStyle(color: Colors.green, fontSize: width / 25),
                   decoration: const InputDecoration(
                     labelText: "Investment (\$)",
                     labelStyle: TextStyle(color: Colors.white60),
