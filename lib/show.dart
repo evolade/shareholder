@@ -3,6 +3,8 @@ import 'main.dart';
 
 class Show {
   static void holderInfo(BuildContext context, int index) {
+    int profit = money[index] - firstMoney[index];
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -41,18 +43,14 @@ class Show {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     Text(
-                      "\n\n\n\$${money[index] - firstMoney[index] > 0 ? '+' : ''}${money[index] - firstMoney[index]}",
+                      "\n\n\n\$${profit > 0 ? '+' : ''}${profit}",
                       style: TextStyle(
-                          color: money[index] - firstMoney[index] > 0
-                              ? Colors.green
-                              : Colors.red),
+                          color: profit > 0 ? Colors.green : Colors.red),
                     ),
                     Text(
-                      "\n\n\n${money[index] - firstMoney[index] > 0 ? '+' : ''}${(((money[index] - firstMoney[index]) / firstMoney[index]) * 100).toStringAsFixed(4)}%",
+                      "\n\n\n${profit > 0 ? '+' : ''}${(((profit) / firstMoney[index]) * 100).toStringAsFixed(4)}%",
                       style: TextStyle(
-                          color: money[index] - firstMoney[index] > 0
-                              ? Colors.green
-                              : Colors.red),
+                          color: profit > 0 ? Colors.green : Colors.red),
                     ),
                   ],
                 ),
