@@ -1,4 +1,5 @@
-// ignore_for_file: avoid_print, prefer_const_constructors
+// ignore_for_file: sized_box_for_whitespace
+
 import 'package:get_storage/get_storage.dart';
 import 'package:flutter/material.dart';
 
@@ -7,7 +8,7 @@ import 'add.dart';
 
 void main() async {
   await GetStorage.init();
-  runApp(MaterialApp(
+  runApp(const MaterialApp(
     debugShowCheckedModeBanner: false,
     home: App(),
   ));
@@ -57,7 +58,7 @@ class _AppState extends State<App> {
     super.initState();
   }
 
-  Color bgColor = Color(0xFF0a0a0a); // blach-ish
+  Color bgColor = const Color(0xFF0a0a0a); // blach-ish
   Color splashColor =
       const Color.fromARGB(63, 127, 127, 127); // semi-trans gray
 
@@ -68,7 +69,7 @@ class _AppState extends State<App> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(
+          title: const Text(
             "Clear all shareholders?",
             style: TextStyle(fontSize: 16),
           ),
@@ -89,13 +90,13 @@ class _AppState extends State<App> {
                   Navigator.pop(context, true);
                 });
               },
-              child: Text("Yes"),
+              child: const Text("Yes"),
             ),
             TextButton(
               onPressed: () {
                 Navigator.pop(context, true);
               },
-              child: Text("No"),
+              child: const Text("No"),
             ),
           ],
         );
@@ -145,10 +146,10 @@ class _AppState extends State<App> {
           bottom: false,
           child: Column(
             children: [
-              Center(),
+              const Center(),
               SizedBox(height: height / 30),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 15),
+                padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: Column(
                   children: [
                     TextField(
@@ -296,7 +297,7 @@ class _AppState extends State<App> {
                         ),
                       ],
                     ),
-                    Divider(
+                    const Divider(
                       thickness: 1.2,
                       color: Colors.white10,
                     ),
@@ -305,7 +306,7 @@ class _AppState extends State<App> {
               ),
               Expanded(
                 child: ListView.builder(
-                  physics: BouncingScrollPhysics(),
+                  physics: const BouncingScrollPhysics(),
                   itemCount: shareHolders.length,
                   itemBuilder: (BuildContext context, int index) {
                     return InkWell(
