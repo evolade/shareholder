@@ -2,7 +2,7 @@
     package="com.example.shares">
    <application
         android:label="Shareholder"
-        android:icon="@mipmap/launcher_icon">
+        android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait"
