@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print, prefer_const_constructors
 import 'package:get_storage/get_storage.dart';
 import 'package:flutter/material.dart';
+
 import 'show.dart';
 import 'add.dart';
 
@@ -12,19 +13,10 @@ void main() async {
   ));
 }
 
-void writeData() {
-  box.write("shareHolders_key", shareHolders);
-  box.write("money_key", money);
-  box.write("perc_key", perc);
-  box.write("valuation_key", valuation);
-
-  box.write("firstMoney_key", firstMoney);
-  box.write("firstPerc_key", firstPerc);
-}
-
 final box = GetStorage(); // load local storage
 
 int valuation = box.read("valuation_key") ?? 0;
+
 List<dynamic> shareHolders = box.read("shareHolders_key") ?? [];
 List<dynamic> money = box.read("money_key") ?? [];
 List<dynamic> perc = box.read("perc_key") ?? [];
@@ -34,6 +26,16 @@ List<dynamic> firstPerc = box.read("firstPerc_key") ?? [];
 
 final nameController = TextEditingController();
 final investmentController = TextEditingController();
+
+void writeData() {
+  box.write("shareHolders_key", shareHolders);
+  box.write("money_key", money);
+  box.write("perc_key", perc);
+  box.write("valuation_key", valuation);
+
+  box.write("firstMoney_key", firstMoney);
+  box.write("firstPerc_key", firstPerc);
+}
 
 class App extends StatefulWidget {
   const App({Key? key}) : super(key: key);
@@ -54,6 +56,12 @@ class _AppState extends State<App> {
     }
     super.initState();
   }
+
+  Color bgColor = Color(0xFF0a0a0a); // blach-ish
+  Color splashColor =
+      const Color.fromARGB(63, 127, 127, 127); // semi-trans gray
+
+  final valueController = TextEditingController();
 
   void confirmClear(BuildContext context) {
     showDialog(
@@ -95,9 +103,34 @@ class _AppState extends State<App> {
     );
   }
 
-  Color bgColor = Color(0xFF1a1b21); // gray
+  void addCash() {
+    if (shareHolders.isNotEmpty) {
+      setState(() {
+        valuation += int.parse(valueController.text);
+        for (int i = 0; i < shareHolders.length; i++) {
+          money[i] = (valuation * perc[i] / 100).round();
+        }
+        writeData();
+      });
+    }
+  }
 
-  final valueController = TextEditingController();
+  Widget button(String content, double width, double height, Color color) {
+    return Container(
+      alignment: Alignment.center,
+      height: height / 14,
+      decoration: BoxDecoration(
+          border: Border.all(color: color),
+          borderRadius: BorderRadius.circular(4)),
+      child: Text(
+        "${content}",
+        style: TextStyle(
+          color: color, // red
+          fontSize: width / 22,
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -119,13 +152,14 @@ class _AppState extends State<App> {
                 child: Column(
                   children: [
                     TextField(
+                      maxLength: 17,
                       cursorColor: Colors.white,
                       controller: nameController,
                       style: TextStyle(
                           color: Colors.white70, fontSize: width / 25),
                       decoration: const InputDecoration(
                         labelText: "Investor name",
-                        labelStyle: TextStyle(color: Colors.white60),
+                        labelStyle: TextStyle(color: Colors.white38),
                         hintText: "George",
                         hintStyle: TextStyle(color: Colors.white24),
                         enabledBorder: UnderlineInputBorder(
@@ -136,16 +170,17 @@ class _AppState extends State<App> {
                         ),
                       ),
                     ),
-                    SizedBox(height: height / 40),
+                    SizedBox(height: height / 100),
                     TextField(
+                      maxLength: 13,
                       keyboardType: TextInputType.number,
                       cursorColor: Colors.white,
                       controller: investmentController,
-                      style:
-                          TextStyle(color: Colors.green, fontSize: width / 25),
+                      style: TextStyle(
+                          color: Colors.green[400], fontSize: width / 25),
                       decoration: const InputDecoration(
                         labelText: "Investment (\$)",
-                        labelStyle: TextStyle(color: Colors.white60),
+                        labelStyle: TextStyle(color: Colors.white38),
                         hintText: "200000",
                         hintStyle: TextStyle(color: Colors.white24),
                         enabledBorder: UnderlineInputBorder(
@@ -156,64 +191,53 @@ class _AppState extends State<App> {
                         ),
                       ),
                     ),
-                    SizedBox(height: height / 30),
+                    SizedBox(height: height / 50),
                     Container(
                       margin: EdgeInsets.symmetric(horizontal: width / 50),
                       child: Row(
                         children: [
                           Expanded(
                             flex: 2,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(2),
-                              child: Container(
-                                height: height / 14,
-                                color: Colors.green[400],
-                                child: TextButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      Add.investor();
-                                    });
-                                  },
-                                  child: Text(
-                                    "Add",
-                                    style: TextStyle(
-                                      color: bgColor,
-                                      fontSize: width / 22,
-                                    ),
-                                  ),
-                                ),
+                            child: InkWell(
+                              borderRadius: BorderRadius.circular(4),
+                              splashColor: Colors.green[400],
+                              onTap: () {
+                                setState(() {
+                                  confirmClear(context);
+                                });
+                              },
+                              child: InkWell(
+                                borderRadius: BorderRadius.circular(4),
+                                splashColor: Colors.green[400],
+                                onTap: () {
+                                  setState(() {
+                                    Add.investor();
+                                  });
+                                },
+                                child: button(
+                                    "Add", width, height, Colors.green[400]!),
                               ),
                             ),
                           ),
                           SizedBox(width: width / 25),
                           Expanded(
                             flex: 1,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(2),
-                              child: Container(
-                                height: height / 14,
-                                color: Colors.red[400],
-                                child: TextButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      confirmClear(context);
-                                    });
-                                  },
-                                  child: Text(
-                                    "Clear",
-                                    style: TextStyle(
-                                      color: bgColor, // red
-                                      fontSize: width / 22,
-                                    ),
-                                  ),
-                                ),
-                              ),
+                            child: InkWell(
+                              borderRadius: BorderRadius.circular(4),
+                              splashColor: Colors.red[400],
+                              onTap: () {
+                                setState(() {
+                                  confirmClear(context);
+                                });
+                              },
+                              child: button(
+                                  "Clear", width, height, Colors.red[400]!),
                             ),
                           ),
                         ],
                       ),
                     ),
-                    SizedBox(height: height / 15),
+                    SizedBox(height: height / 18),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -231,10 +255,11 @@ class _AppState extends State<App> {
                                 keyboardType: TextInputType.number,
                                 cursorColor: Colors.white,
                                 style: TextStyle(
-                                    color: Colors.green, fontSize: width / 32),
+                                    color: Colors.green[400],
+                                    fontSize: width / 32),
                                 decoration: const InputDecoration(
                                   labelStyle: TextStyle(color: Colors.white60),
-                                  hintText: "150000",
+                                  hintText: "120000",
                                   hintStyle: TextStyle(color: Colors.white24),
                                   enabledBorder: UnderlineInputBorder(
                                     borderSide:
@@ -248,29 +273,22 @@ class _AppState extends State<App> {
                               ),
                             ),
                             SizedBox(width: width / 40),
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(100),
+                            InkWell(
+                              borderRadius: BorderRadius.circular(50),
+                              splashColor: Colors.green[400],
+                              onTap: () {
+                                addCash();
+                              },
                               child: Container(
                                 height: 40,
                                 width: 40,
-                                color: Colors.green[400],
-                                child: IconButton(
-                                  onPressed: () {
-                                    if (shareHolders.isNotEmpty) {
-                                      setState(() {
-                                        valuation +=
-                                            int.parse(valueController.text);
-                                        for (int i = 0;
-                                            i < shareHolders.length;
-                                            i++) {
-                                          money[i] = (valuation * perc[i] / 100)
-                                              .round();
-                                        }
-                                        writeData();
-                                      });
-                                    }
-                                  },
-                                  icon: Icon(Icons.add),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(50),
+                                  border: Border.all(color: Colors.green[400]!),
+                                ),
+                                child: Icon(
+                                  Icons.add,
+                                  color: Colors.green[400],
                                 ),
                               ),
                             ),
@@ -291,6 +309,7 @@ class _AppState extends State<App> {
                   itemCount: shareHolders.length,
                   itemBuilder: (BuildContext context, int index) {
                     return InkWell(
+                      splashColor: splashColor,
                       onTap: () {
                         Show.holderInfo(context, index);
                       },
@@ -306,7 +325,7 @@ class _AppState extends State<App> {
                           "\$${money[index]}",
                           style: TextStyle(
                             fontSize: width / 25,
-                            color: Colors.green,
+                            color: Colors.green[400],
                           ),
                         ),
                         trailing: Text(
