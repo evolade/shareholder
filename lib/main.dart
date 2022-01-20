@@ -3,8 +3,7 @@
 import 'package:get_storage/get_storage.dart';
 import 'package:flutter/material.dart';
 
-import 'show.dart';
-import 'add.dart';
+import 'v.dart';
 
 void main() async {
   await GetStorage.init();
@@ -16,27 +15,19 @@ void main() async {
 
 final box = GetStorage(); // load local storage
 
-int valuation = box.read("valuation_key") ?? 0;
+num valuation = box.read("valuation_key") ?? 0;
 
-List<dynamic> shareHolders = box.read("shareHolders_key") ?? [];
-List<dynamic> money = box.read("money_key") ?? [];
-List<dynamic> perc = box.read("perc_key") ?? [];
+List shareHolders = box.read("shareHolders_key") ?? [];
+List money = box.read("money_key") ?? [];
+List perc = box.read("perc_key") ?? [];
 
-List<dynamic> firstMoney = box.read("firstMoney_key") ?? [];
-List<dynamic> firstPerc = box.read("firstPerc_key") ?? [];
+List firstMoney = box.read("firstMoney_key") ?? [];
+List firstPerc = box.read("firstPerc_key") ?? [];
 
 final nameController = TextEditingController();
 final investmentController = TextEditingController();
 
-void writeData() {
-  box.write("shareHolders_key", shareHolders);
-  box.write("money_key", money);
-  box.write("perc_key", perc);
-  box.write("valuation_key", valuation);
-
-  box.write("firstMoney_key", firstMoney);
-  box.write("firstPerc_key", firstPerc);
-}
+Color bgColor = const Color(0xFF0e0f12); // black-ish
 
 class App extends StatefulWidget {
   const App({Key? key}) : super(key: key);
@@ -58,13 +49,12 @@ class _AppState extends State<App> {
     super.initState();
   }
 
-  Color bgColor = const Color(0xFF0a0a0a); // blach-ish
   Color splashColor =
       const Color.fromARGB(63, 127, 127, 127); // semi-trans gray
 
   final valueController = TextEditingController();
 
-  void confirmClear(BuildContext context) {
+  void confirmClear() {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -85,7 +75,7 @@ class _AppState extends State<App> {
                   firstMoney.clear();
                   firstPerc.clear();
 
-                  writeData();
+                  V.writeData();
 
                   Navigator.pop(context, true);
                 });
@@ -111,26 +101,9 @@ class _AppState extends State<App> {
         for (int i = 0; i < shareHolders.length; i++) {
           money[i] = (valuation * perc[i] / 100).round();
         }
-        writeData();
+        V.writeData();
       });
     }
-  }
-
-  Widget button(String content, double width, double height, Color color) {
-    return Container(
-      alignment: Alignment.center,
-      height: height / 14,
-      decoration: BoxDecoration(
-          border: Border.all(color: color),
-          borderRadius: BorderRadius.circular(4)),
-      child: Text(
-        "${content}",
-        style: TextStyle(
-          color: color, // red
-          fontSize: width / 22,
-        ),
-      ),
-    );
   }
 
   @override
@@ -198,41 +171,32 @@ class _AppState extends State<App> {
                       child: Row(
                         children: [
                           Expanded(
-                            flex: 2,
+                            flex: 7,
                             child: InkWell(
-                              borderRadius: BorderRadius.circular(4),
+                              borderRadius: BorderRadius.circular(32),
                               splashColor: Colors.green[400],
                               onTap: () {
                                 setState(() {
-                                  confirmClear(context);
+                                  V.addInvestor();
                                 });
                               },
-                              child: InkWell(
-                                borderRadius: BorderRadius.circular(4),
-                                splashColor: Colors.green[400],
-                                onTap: () {
-                                  setState(() {
-                                    Add.investor();
-                                  });
-                                },
-                                child: button(
-                                    "Add", width, height, Colors.green[400]!),
-                              ),
+                              child: V.button(Icons.person_add_outlined, width,
+                                  height, Colors.green[400]!),
                             ),
                           ),
                           SizedBox(width: width / 25),
                           Expanded(
-                            flex: 1,
+                            flex: 3,
                             child: InkWell(
-                              borderRadius: BorderRadius.circular(4),
+                              borderRadius: BorderRadius.circular(32),
                               splashColor: Colors.red[400],
                               onTap: () {
                                 setState(() {
-                                  confirmClear(context);
+                                  confirmClear();
                                 });
                               },
-                              child: button(
-                                  "Clear", width, height, Colors.red[400]!),
+                              child: V.button(Icons.person_off_outlined, width,
+                                  height, Colors.red[400]!),
                             ),
                           ),
                         ],
@@ -281,8 +245,8 @@ class _AppState extends State<App> {
                                 addCash();
                               },
                               child: Container(
-                                height: 40,
-                                width: 40,
+                                height: 35,
+                                width: 35,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(50),
                                   border: Border.all(color: Colors.green[400]!),
@@ -290,6 +254,7 @@ class _AppState extends State<App> {
                                 child: Icon(
                                   Icons.add,
                                   color: Colors.green[400],
+                                  size: 20,
                                 ),
                               ),
                             ),
@@ -312,7 +277,7 @@ class _AppState extends State<App> {
                     return InkWell(
                       splashColor: splashColor,
                       onTap: () {
-                        Show.holderInfo(context, index);
+                        V.showHolderInfo(context, index);
                       },
                       child: ListTile(
                         leading: Text(
