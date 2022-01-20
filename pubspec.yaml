@@ -37,6 +37,7 @@ dependencies:
   get_storage: ^2.0.3
   path_provider: ^2.0.6
   splash: ^1.1.0
+  flutter_slidable: ^1.2.0
 
 dev_dependencies:
   flutter_test:
