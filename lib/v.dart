@@ -125,7 +125,7 @@ class V {
     );
   }
 
-  static void toast(String content, double width) {
+  static void toast(String content) {
     Fluttertoast.showToast(
         msg: "${content}",
         toastLength: Toast.LENGTH_LONG,
