@@ -15,6 +15,8 @@ void main() async {
 
 final box = GetStorage(); // load local storage
 
+bool disabled = true;
+
 num valuation = box.read("valuation_key") ?? 0;
 
 List shareHolders = box.read("shareHolders_key") ?? [];
@@ -26,6 +28,9 @@ List firstPerc = box.read("firstPerc_key") ?? [];
 
 final nameController = TextEditingController();
 final investmentController = TextEditingController();
+
+var height;
+var width;
 
 Color bgColor = const Color(0xFF0e0f12); // black-ish
 
@@ -46,6 +51,8 @@ class _AppState extends State<App> {
         valuation = box.read("valuation_key");
       }
     }
+
+    disabled = shareHolders.isEmpty;
     super.initState();
   }
 
@@ -70,12 +77,13 @@ class _AppState extends State<App> {
                   shareHolders.clear();
                   money.clear();
                   perc.clear();
-                  valuation = 0;
-
                   firstMoney.clear();
                   firstPerc.clear();
+                  valuation = 0;
 
                   V.writeData();
+
+                  disabled = true;
 
                   Navigator.pop(context, true);
                 });
@@ -108,8 +116,8 @@ class _AppState extends State<App> {
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
+    width = MediaQuery.of(context).size.width;
+    height = MediaQuery.of(context).size.height;
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
@@ -127,7 +135,7 @@ class _AppState extends State<App> {
                   children: [
                     TextField(
                       maxLength: 17,
-                      cursorColor: Colors.white,
+                      cursorColor: Colors.grey,
                       controller: nameController,
                       style: TextStyle(
                           color: Colors.white70, fontSize: width / 25),
@@ -148,7 +156,7 @@ class _AppState extends State<App> {
                     TextField(
                       maxLength: 13,
                       keyboardType: TextInputType.number,
-                      cursorColor: Colors.white,
+                      cursorColor: Colors.grey,
                       controller: investmentController,
                       style: TextStyle(
                           color: Colors.green[400], fontSize: width / 25),
@@ -179,19 +187,18 @@ class _AppState extends State<App> {
                                 try {
                                   if (nameController.text == "" ||
                                       investmentController.text == "") {
-                                    V.toast("Form isn't filled", width);
+                                    V.toast("Form isn't filled");
                                   } else {
                                     setState(() {
                                       V.addInvestor();
+                                      disabled = false;
                                     });
                                   }
                                 } catch (_) {
-                                  V.toast(
-                                      "Investment should be a number", width);
+                                  V.toast("Investment should be a number");
                                 }
                               },
-                              child: V.button(Icons.person_add_outlined, width,
-                                  height, Colors.green[400]!),
+                              child: V.button(Icons.person_add_outlined, false),
                             ),
                           ),
                           SizedBox(width: width / 25),
@@ -199,14 +206,19 @@ class _AppState extends State<App> {
                             flex: 3,
                             child: InkWell(
                               borderRadius: BorderRadius.circular(32),
-                              splashColor: Colors.red[400],
+                              splashColor: disabled
+                                  ? Colors.transparent
+                                  : Colors.red[400],
                               onTap: () {
-                                setState(() {
-                                  confirmClear();
-                                });
+                                if (disabled) {
+                                  null;
+                                } else {
+                                  setState(() {
+                                    confirmClear();
+                                  });
+                                }
                               },
-                              child: V.button(Icons.person_off_outlined, width,
-                                  height, Colors.red[400]!),
+                              child: V.button(Icons.person_off_outlined, true),
                             ),
                           ),
                         ],
@@ -228,13 +240,13 @@ class _AppState extends State<App> {
                               child: TextField(
                                 controller: valueController,
                                 keyboardType: TextInputType.number,
-                                cursorColor: Colors.white,
+                                cursorColor: Colors.grey,
                                 style: TextStyle(
                                     color: Colors.green[400],
                                     fontSize: width / 32),
                                 decoration: const InputDecoration(
                                   labelStyle: TextStyle(color: Colors.white60),
-                                  hintText: "120000",
+                                  hintText: "10000",
                                   hintStyle: TextStyle(color: Colors.white24),
                                   enabledBorder: UnderlineInputBorder(
                                     borderSide:
@@ -245,17 +257,20 @@ class _AppState extends State<App> {
                                         BorderSide(color: Colors.white38),
                                   ),
                                 ),
+                                readOnly: disabled,
                               ),
                             ),
                             SizedBox(width: width / 40),
                             InkWell(
                               borderRadius: BorderRadius.circular(50),
-                              splashColor: Colors.green[400],
+                              splashColor: disabled
+                                  ? Colors.transparent
+                                  : Colors.green[400],
                               onTap: () {
                                 try {
                                   addCash();
                                 } catch (_) {
-                                  V.toast("Form isn't filled correctly", width);
+                                  V.toast("Form isn't filled correctly");
                                 }
                               },
                               child: Container(
@@ -263,11 +278,16 @@ class _AppState extends State<App> {
                                 width: 35,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(50),
-                                  border: Border.all(color: Colors.green[400]!),
+                                  border: Border.all(
+                                      color: disabled
+                                          ? Colors.white24
+                                          : Colors.green[400]!),
                                 ),
                                 child: Icon(
                                   Icons.add,
-                                  color: Colors.green[400],
+                                  color: disabled
+                                      ? Colors.white24
+                                      : Colors.green[400],
                                   size: 20,
                                 ),
                               ),

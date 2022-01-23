@@ -98,21 +98,28 @@ class V {
     );
   }
 
-  static Widget button(
-      IconData icon, double width, double height, Color color) {
+  static Widget button(IconData icon, bool canDisable) {
     return Container(
       alignment: Alignment.center,
       height: 60,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(32),
         border: Border.all(
-          color: color,
+          color: canDisable
+              ? disabled
+                  ? Colors.white24
+                  : Colors.red[400]!
+              : Colors.green[400]!,
           width: 1,
         ),
       ),
       child: Icon(
         icon,
-        color: color,
+        color: canDisable
+            ? disabled
+                ? Colors.white24
+                : Colors.red[400]
+            : Colors.green[400],
         size: 26,
       ),
     );
