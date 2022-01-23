@@ -176,9 +176,19 @@ class _AppState extends State<App> {
                               borderRadius: BorderRadius.circular(32),
                               splashColor: Colors.green[400],
                               onTap: () {
-                                setState(() {
-                                  V.addInvestor();
-                                });
+                                try {
+                                  if (nameController.text == "" ||
+                                      investmentController.text == "") {
+                                    V.toast("Form isn't filled", width);
+                                  } else {
+                                    setState(() {
+                                      V.addInvestor();
+                                    });
+                                  }
+                                } catch (_) {
+                                  V.toast(
+                                      "Investment should be a number", width);
+                                }
                               },
                               child: V.button(Icons.person_add_outlined, width,
                                   height, Colors.green[400]!),
@@ -242,7 +252,11 @@ class _AppState extends State<App> {
                               borderRadius: BorderRadius.circular(50),
                               splashColor: Colors.green[400],
                               onTap: () {
-                                addCash();
+                                try {
+                                  addCash();
+                                } catch (_) {
+                                  V.toast("Form isn't filled correctly", width);
+                                }
                               },
                               child: Container(
                                 height: 35,

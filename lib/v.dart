@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+
 import 'main.dart';
 
 class V {
@@ -114,5 +116,16 @@ class V {
         size: 26,
       ),
     );
+  }
+
+  static void toast(String content, double width) {
+    Fluttertoast.showToast(
+        msg: "${content}",
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.TOP,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.black45,
+        textColor: Colors.red[400],
+        fontSize: width / 25);
   }
 }
