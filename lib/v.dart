@@ -5,48 +5,47 @@ import 'main.dart';
 
 class V {
   static void addInvestor() {
-    List<dynamic> calc = [];
-    money.add(int.parse(investmentController.text));
-    double roi = money.last / (money.last + valuation);
-    shareHolders.add("${nameController.text}");
-    perc.add(roi * 100);
-    for (int i = 0; i < shareHolders.length - 1; i++) {
-      calc.add(perc[i] / perc.last);
+    Map investor = {};
+    shareholders.add(investor);
+    List<num> calc = [];
+    investor["money"] = int.parse(investmentController.text);
+    double roi = investor["money"] / (investor["money"] + valuation);
+    investor["name"] = nameController.text;
+    investor["perc"] = roi * 100;
+    for (int i = 0; i < shareholders.length - 1; i++) {
+      calc.add(shareholders[i]["perc"] / investor["perc"]);
     }
+
     double prevPerc = 0;
     for (int i = 0; i < calc.length; i++) {
       prevPerc += calc[i];
     }
-    for (int i = 0; i < shareHolders.length - 1; i++) {
-      perc[i] = perc[i] - (perc[i] / prevPerc);
+
+    for (int i = 0; i < shareholders.length - 1; i++) {
+      shareholders[i]["perc"] =
+          shareholders[i]["perc"] - (shareholders[i]["perc"] / prevPerc);
     }
+
     valuation += int.parse(investmentController.text);
-
-    firstMoney.add(money.last);
-    firstPerc.add(perc.last);
-
+    investor["firstMoney"] = investor["money"];
+    investor["firstPerc"] = investor["perc"];
     writeData();
   }
 
   static void writeData() {
-    box.write("shareHolders_key", shareHolders);
-    box.write("money_key", money);
-    box.write("perc_key", perc);
-    box.write("valuation_key", valuation);
-
-    box.write("firstMoney_key", firstMoney);
-    box.write("firstPerc_key", firstPerc);
+    db.write("shareholders_key", shareholders);
+    db.write("valuation_key", valuation);
   }
 
   static void showHolderInfo(BuildContext context, int index) {
-    num profit = money[index] - firstMoney[index];
-
+    num profit =
+        shareholders[index]["money"] - shareholders[index]["firstMoney"];
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(
-            "${index + 1}. ${shareHolders[index]}    ",
+            "${index + 1}. ${shareholders[index]['name']}    ",
             style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
           content: Container(
@@ -57,22 +56,25 @@ class V {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: const [
-                    Text("first \n"),
+                    Text("first\n"),
                     Text("now\n"),
                   ],
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text("\$${firstMoney[index].toStringAsFixed(2)}"),
-                    Text("\$${money[index].toStringAsFixed(2)}"),
+                    Text(
+                        "\$${shareholders[index]['firstMoney'].toStringAsFixed(2)}"),
+                    Text(
+                        "\$${shareholders[index]['money'].toStringAsFixed(2)}"),
                   ],
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text("${firstPerc[index].toStringAsFixed(4)}%"),
-                    Text("${perc[index].toStringAsFixed(4)}%"),
+                    Text(
+                        "${shareholders[index]['firstPerc'].toStringAsFixed(4)}%"),
+                    Text("${shareholders[index]['perc'].toStringAsFixed(4)}%"),
                   ],
                 ),
                 Row(
@@ -84,7 +86,7 @@ class V {
                           color: profit > 0 ? Colors.green : Colors.red),
                     ),
                     Text(
-                      "\n\n${profit > 0 ? '+' : ''}${(((profit) / firstMoney[index]) * 100).toStringAsFixed(4)}%",
+                      "\n\n${profit > 0 ? '+' : ''}${(((profit) / shareholders[index]['firstMoney']) * 100).toStringAsFixed(4)}%",
                       style: TextStyle(
                           color: profit > 0 ? Colors.green : Colors.red),
                     ),
@@ -127,12 +129,13 @@ class V {
 
   static void toast(String content) {
     Fluttertoast.showToast(
-        msg: "${content}",
-        toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.TOP,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.black45,
-        textColor: Colors.red[400],
-        fontSize: width / 25);
+      msg: "${content}",
+      toastLength: Toast.LENGTH_LONG,
+      gravity: ToastGravity.TOP,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.black45,
+      textColor: Colors.red[400],
+      fontSize: width / 25,
+    );
   }
 }

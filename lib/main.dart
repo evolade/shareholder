@@ -1,5 +1,3 @@
-// ignore_for_file: sized_box_for_whitespace
-
 import 'package:get_storage/get_storage.dart';
 import 'package:flutter/material.dart';
 
@@ -13,24 +11,19 @@ void main() async {
   ));
 }
 
-final box = GetStorage(); // load local storage
+final db = GetStorage(); // load local storage
+
+List shareholders = [];
+
+int valuation = 0;
 
 bool disabled = true;
-
-num valuation = box.read("valuation_key") ?? 0;
-
-List shareHolders = box.read("shareHolders_key") ?? [];
-List money = box.read("money_key") ?? [];
-List perc = box.read("perc_key") ?? [];
-
-List firstMoney = box.read("firstMoney_key") ?? [];
-List firstPerc = box.read("firstPerc_key") ?? [];
 
 final nameController = TextEditingController();
 final investmentController = TextEditingController();
 
-var height;
-var width;
+double height = 0;
+double width = 0;
 
 Color bgColor = const Color(0xFF0e0f12); // black-ish
 
@@ -43,16 +36,14 @@ class App extends StatefulWidget {
 class _AppState extends State<App> {
   @override
   void initState() {
-    if (box.read("shareHolders_key") != null) {
-      if (box.read("shareHolders_key").length > 1) {
-        shareHolders = box.read("shareHolders_key");
-        money = box.read("money_key");
-        perc = box.read("perc_key");
-        valuation = box.read("valuation_key");
+    if (db.read("shareholders_key") != null) {
+      if (db.read("shareholders_key").length > 1) {
+        shareholders = db.read("shareholders_key");
+        valuation = db.read("valuation_key");
       }
     }
 
-    disabled = shareHolders.isEmpty;
+    disabled = shareholders.isEmpty;
     super.initState();
   }
 
@@ -74,17 +65,10 @@ class _AppState extends State<App> {
             TextButton(
               onPressed: () {
                 setState(() {
-                  shareHolders.clear();
-                  money.clear();
-                  perc.clear();
-                  firstMoney.clear();
-                  firstPerc.clear();
+                  shareholders.clear();
                   valuation = 0;
-
                   V.writeData();
-
                   disabled = true;
-
                   Navigator.pop(context, true);
                 });
               },
@@ -103,11 +87,12 @@ class _AppState extends State<App> {
   }
 
   void addCash() {
-    if (shareHolders.isNotEmpty) {
+    if (shareholders.isNotEmpty) {
       setState(() {
         valuation += int.parse(valueController.text);
-        for (int i = 0; i < shareHolders.length; i++) {
-          money[i] = (valuation * perc[i] / 100).round();
+        for (int i = 0; i < shareholders.length; i++) {
+          shareholders[i]["money"] =
+              (valuation * shareholders[i]["perc"] / 100).round();
         }
         V.writeData();
       });
@@ -306,7 +291,7 @@ class _AppState extends State<App> {
               Expanded(
                 child: ListView.builder(
                   physics: const BouncingScrollPhysics(),
-                  itemCount: shareHolders.length,
+                  itemCount: shareholders.length,
                   itemBuilder: (BuildContext context, int index) {
                     return InkWell(
                       splashColor: splashColor,
@@ -315,21 +300,21 @@ class _AppState extends State<App> {
                       },
                       child: ListTile(
                         leading: Text(
-                          "${index + 1}.  ${shareHolders[index]}    ",
+                          "${index + 1}.    ${shareholders[index]['name']}",
                           style: TextStyle(
                             fontSize: width / 30,
                             color: Colors.white70,
                           ),
                         ),
                         title: Text(
-                          "\$${money[index]}",
+                          "\$${shareholders[index]['money']}",
                           style: TextStyle(
                             fontSize: width / 25,
                             color: Colors.green[400],
                           ),
                         ),
                         trailing: Text(
-                          "${perc[index].toStringAsFixed(2)}%",
+                          "${shareholders[index]['perc'].toStringAsFixed(2)}%",
                           style: TextStyle(
                               fontSize: width / 30,
                               fontWeight: FontWeight.bold,
