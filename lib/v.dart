@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -43,56 +45,94 @@ class V {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(
-            "${index + 1}. ${shareholders[index]['name']}    ",
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        return BackdropFilter(
+          filter: ImageFilter.blur(
+            sigmaX: 3,
+            sigmaY: 3,
           ),
-          content: Container(
-            height: 140,
-            width: double.infinity,
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const [
-                    Text("first\n"),
-                    Text("now\n"),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                        "\$${shareholders[index]['firstMoney'].toStringAsFixed(2)}"),
-                    Text(
-                        "\$${shareholders[index]['money'].toStringAsFixed(2)}"),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                        "${shareholders[index]['firstPerc'].toStringAsFixed(4)}%"),
-                    Text("${shareholders[index]['perc'].toStringAsFixed(4)}%"),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Text(
-                      "\n\n\$${profit > 0 ? '+' : ''}${profit}",
-                      style: TextStyle(
-                          color: profit > 0 ? Colors.green : Colors.red),
-                    ),
-                    Text(
-                      "\n\n${profit > 0 ? '+' : ''}${(((profit) / shareholders[index]['firstMoney']) * 100).toStringAsFixed(4)}%",
-                      style: TextStyle(
-                          color: profit > 0 ? Colors.green : Colors.red),
-                    ),
-                  ],
-                ),
-              ],
+          child: AlertDialog(
+            backgroundColor: bgColor,
+            title: Text(
+              "${index + 1}. ${shareholders[index]['name']}    ",
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.white70,
+              ),
+            ),
+            content: SizedBox(
+              height: 140,
+              width: double.infinity,
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: const [
+                      Text(
+                        "first\n",
+                        style: TextStyle(
+                          color: Colors.white70,
+                        ),
+                      ),
+                      Text(
+                        "now\n",
+                        style: TextStyle(
+                          color: Colors.white70,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "\$${shareholders[index]['firstMoney'].toStringAsFixed(2)}",
+                        style: const TextStyle(
+                          color: Colors.white70,
+                        ),
+                      ),
+                      Text(
+                        "\$${shareholders[index]['money'].toStringAsFixed(2)}",
+                        style: const TextStyle(
+                          color: Colors.white70,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "${shareholders[index]['firstPerc'].toStringAsFixed(4)}%",
+                        style: const TextStyle(
+                          color: Colors.white70,
+                        ),
+                      ),
+                      Text(
+                        "${shareholders[index]['perc'].toStringAsFixed(4)}%",
+                        style: const TextStyle(
+                          color: Colors.white70,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Text(
+                        "\n\n\$${profit > 0 ? '+' : ''}$profit",
+                        style: TextStyle(
+                            color: profit > 0 ? Colors.green : Colors.red),
+                      ),
+                      Text(
+                        "\n\n${profit > 0 ? '+' : ''}${(((profit) / shareholders[index]['firstMoney']) * 100).toStringAsFixed(4)}%",
+                        style: TextStyle(
+                            color: profit > 0 ? Colors.green : Colors.red),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         );
@@ -129,7 +169,7 @@ class V {
 
   static void toast(String content) {
     Fluttertoast.showToast(
-      msg: "${content}",
+      msg: content,
       toastLength: Toast.LENGTH_LONG,
       gravity: ToastGravity.TOP,
       timeInSecForIosWeb: 1,

@@ -220,7 +220,7 @@ class _AppState extends State<App> {
                         ),
                         Row(
                           children: [
-                            Container(
+                            SizedBox(
                               width: width / 5,
                               child: TextField(
                                 controller: valueController,
