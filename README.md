@@ -1,5 +1,7 @@
 # Shareholder
-Google Play: https://play.google.com/store/apps/details?id=com.vdevs.shareholder
+Google Play: https://play.google.com/store/apps/details?id=com.vdevs.shareholder. 
+
+React version: https://github.com/evolade/shareholder-react
 ## Run
 ```
 flutter run
