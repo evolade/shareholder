@@ -1,5 +1,6 @@
 import 'package:get_storage/get_storage.dart';
 import 'package:flutter/material.dart';
+import 'dart:ui';
 
 import 'v.dart';
 
@@ -56,31 +57,49 @@ class _AppState extends State<App> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text(
-            "Clear all shareholders?",
-            style: TextStyle(fontSize: 16),
+        return BackdropFilter(
+          filter: ImageFilter.blur(
+            sigmaX: 3,
+            sigmaY: 3,
           ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                setState(() {
-                  shareholders.clear();
-                  valuation = 0;
-                  V.writeData();
-                  disabled = true;
+          child: AlertDialog(
+            backgroundColor: bgColor,
+            title: const Text(
+              "Clear all shareholders?",
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.white70,
+              ),
+            ),
+            actions: [
+              TextButton(
+                style: TextButton.styleFrom(primary: Colors.red[400]),
+                onPressed: () {
                   Navigator.pop(context, true);
-                });
-              },
-              child: const Text("Yes"),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context, true);
-              },
-              child: const Text("No"),
-            ),
-          ],
+                },
+                child: const Text(
+                  "No",
+                  style: TextStyle(color: Colors.white70),
+                ),
+              ),
+              TextButton(
+                style: TextButton.styleFrom(primary: Colors.green[400]),
+                onPressed: () {
+                  setState(() {
+                    shareholders.clear();
+                    valuation = 0;
+                    V.writeData();
+                    disabled = true;
+                    Navigator.pop(context, true);
+                  });
+                },
+                child: const Text(
+                  "Yes",
+                  style: TextStyle(color: Colors.white70),
+                ),
+              ),
+            ],
+          ),
         );
       },
     );

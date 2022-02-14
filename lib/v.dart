@@ -1,7 +1,6 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'dart:ui';
 
 import 'main.dart';
 
@@ -71,13 +70,13 @@ class V {
                       Text(
                         "first\n",
                         style: TextStyle(
-                          color: Colors.white70,
+                          color: Colors.white38,
                         ),
                       ),
                       Text(
                         "now\n",
                         style: TextStyle(
-                          color: Colors.white70,
+                          color: Colors.white38,
                         ),
                       ),
                     ],
@@ -122,12 +121,16 @@ class V {
                       Text(
                         "\n\n\$${profit > 0 ? '+' : ''}$profit",
                         style: TextStyle(
-                            color: profit > 0 ? Colors.green : Colors.red),
+                            color: profit > 0
+                                ? Colors.green[400]
+                                : Colors.red[400]),
                       ),
                       Text(
                         "\n\n${profit > 0 ? '+' : ''}${(((profit) / shareholders[index]['firstMoney']) * 100).toStringAsFixed(4)}%",
                         style: TextStyle(
-                            color: profit > 0 ? Colors.green : Colors.red),
+                            color: profit > 0
+                                ? Colors.green[400]
+                                : Colors.red[400]),
                       ),
                     ],
                   ),
