@@ -41,6 +41,10 @@ class V {
   static void showHolderInfo(BuildContext context, int index) {
     num profit =
         shareholders[index]["money"] - shareholders[index]["firstMoney"];
+
+    String growth = (((profit) / shareholders[index]['firstMoney']) * 100)
+        .toStringAsFixed(4);
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -126,7 +130,7 @@ class V {
                                 : Colors.red[400]),
                       ),
                       Text(
-                        "\n\n${profit > 0 ? '+' : ''}${(((profit) / shareholders[index]['firstMoney']) * 100).toStringAsFixed(4)}%",
+                        "\n\n${profit > 0 ? '+' : ''}$growth%",
                         style: TextStyle(
                             color: profit > 0
                                 ? Colors.green[400]

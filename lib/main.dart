@@ -74,9 +74,7 @@ class _AppState extends State<App> {
             actions: [
               TextButton(
                 style: TextButton.styleFrom(primary: Colors.red[400]),
-                onPressed: () {
-                  Navigator.pop(context, true);
-                },
+                onPressed: () => Navigator.pop(context, true),
                 child: const Text(
                   "No",
                   style: TextStyle(color: Colors.white70),
@@ -217,9 +215,7 @@ class _AppState extends State<App> {
                                 if (disabled) {
                                   null;
                                 } else {
-                                  setState(() {
-                                    confirmClear();
-                                  });
+                                  setState(() => confirmClear());
                                 }
                               },
                               child: V.button(Icons.person_off_outlined, true),
@@ -314,9 +310,7 @@ class _AppState extends State<App> {
                   itemBuilder: (BuildContext context, int index) {
                     return InkWell(
                       splashColor: splashColor,
-                      onTap: () {
-                        V.showHolderInfo(context, index);
-                      },
+                      onTap: () => V.showHolderInfo(context, index),
                       child: ListTile(
                         leading: Text(
                           "${index + 1}.    ${shareholders[index]['name']}",
